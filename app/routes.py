@@ -4,7 +4,7 @@ from app.models import User, Post
 from app.forms import RegistrationForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
-from app.mysqlconnection import DBConnection
+
 
 posts = [
     
@@ -28,6 +28,9 @@ posts = [
     }
 
 ]
+
+interface = Interface()
+
 
 @app.route('/')
 @app.route('/home')
@@ -60,21 +63,26 @@ def login():
     if form.validate_on_submit():
         user = request.form['username']
         passw = request.form['password']
-        interface = Interface()
-        resp = interface.create_connection(user,passw)
-        dbd = interface.connection.execute
-        dbd('show databases')
-        for dbs in dbd:
-            print (dbs)
-        if interface.connection == True:
-            flash('Login Successful', 'success')
-        elif interface.connection != True:
-            flash('Please check username and password.', 'danger')    
-    return render_template('login.html', title='Login', form=form)
+        interface.create_connection(user,passw)
+        if interface.get_connection():
+            dbcur = interface.create_cursor()
+            dbcur.execute('show databases')
+            for dbs in dbcur:
+                print (dbs)
+            dbcur.close()
+            next_page = request.args.get('next')
+            if interface.get_connection:
+                flash("Still get the connection", 'info')
+            return redirect(next_page) if next_page else redirect(url_for('about'))
+            
+        else:
+            flash('Please check username and password.', 'danger')
+               
+    return render_template('login.html', title='Login', form=form, check = interface.get_connection)
 
 @app.route('/logout')
 def logout():
-    logout_user()
+    interface.close_connection()
     return redirect(url_for('home'))
 
 @app.route('/account')

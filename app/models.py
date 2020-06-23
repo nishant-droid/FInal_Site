@@ -7,12 +7,11 @@ from app.interface import Interface
 
 @login_manager.user_loader
 def load_user(user_id):
-    """    print ('this is user id-->',user_id)
-    interface = Interface()
-    resp = interface.create_connection('root','Password@123')
-    my_cursor = resp.cursor()
-    user_id = my_cursor.execute('select user from mysql.user where user={user_id}')"""
-    return User.query.get(int(user_id))
+    dbcur = interface.connection.cursor()
+    query = f'select user from mysql.user where user={user_id}'
+    dbcur.execute(query) 
+    return dbcur
+
 
 
 class User(db.Model, UserMixin):

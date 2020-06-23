@@ -1,11 +1,12 @@
 import mysql.connector
 from mysql.connector import errorcode
 
+
 class DBConnection(object):
     def __init__(self):
         self.mydb = None
         self.my_cursor = None
-
+        
 
     def connection(self, user, pwd):
         try:
@@ -14,8 +15,18 @@ class DBConnection(object):
                     user = user,
                     passwd = pwd,
                     auth_plugin = "mysql_native_password",)
-            my_cursor = mydb.cursor()
-            return my_cursor
+                
+            if mydb.is_connected:
+                return mydb
 
         except mysql.connector.Error as err:
-            return err
+            return False
+        
+"""
+    def DBCursor(self):
+        if self.connection != False:
+            my_cursor = self.connection.cursor()
+            return my_cursor
+        else:
+            return False
+"""
