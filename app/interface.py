@@ -1,5 +1,6 @@
 from app.mysqlconnection import DBConnection
 
+
 class Interface(object):
     
     def __init__(self):
@@ -11,24 +12,26 @@ class Interface(object):
         try:
             dbObject = DBConnection()
             self.connection = dbObject.connection(username, password)
-            return True
+            self.my_cursor = self.connection.cursor()
+            return self.my_cursor
 
         except ConnectionError as ex:
             return False
     
     def create_cursor(self):
         if self.connection:
+            self.get_connection()
             return self.connection.cursor()
     
 
-    def get_connection(self):   
+    def get_connection(self):
         return self.connection
+        
     
     def close_connection(self):
         if self.connection:
-            print("Connection closed!")
-            return self.connection.disconnect()
-
+            self.connection.close()
+            return True
 
         
 

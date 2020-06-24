@@ -5,7 +5,6 @@ from app.forms import RegistrationForm, LoginForm
 from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
 
-
 posts = [
     
     {
@@ -28,14 +27,14 @@ posts = [
     }
 
 ]
-
+print ("creating inter object")
 interface = Interface()
 
 
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=posts, condition=bool(interface.get_connection))
 
 @app.route('/about')
 def about():
@@ -55,37 +54,35 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
+        print('after submit')
         user = request.form['username']
         passw = request.form['password']
-        interface.create_connection(user,passw)
+        dbcur = interface.create_connection(user,passw)
+        dbcur.execute('show databases')
+        for db in dbcur:
+            print(db)
         if interface.get_connection():
-            dbcur = interface.create_cursor()
-            dbcur.execute('show databases')
-            for dbs in dbcur:
-                print (dbs)
-            dbcur.close()
             next_page = request.args.get('next')
-            if interface.get_connection:
-                flash("Still get the connection", 'info')
-            return redirect(next_page) if next_page else redirect(url_for('about'))
-            
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Please check username and password.', 'danger')
-               
-    return render_template('login.html', title='Login', form=form, check = interface.get_connection)
+            flash('Please check username and password.', 'danger')        
+    return render_template('login.html', title='Login', form=form, condition=bool(interface.get_connection()))
 
 @app.route('/logout')
 def logout():
     interface.close_connection()
-    return redirect(url_for('home'))
+    form = LoginForm()
+    return render_template('login.html', title='Login', form= form)
 
 @app.route('/account')
-@login_required
 def account():
-    return render_template('account.html', title='Account')
+    if interface.get_connection():
+        return render_template('account.html', title='Account')
+    else:
+        flash('Please login', 'info')
+        return redirect(url_for('login'))
