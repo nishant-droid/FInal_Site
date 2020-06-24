@@ -34,7 +34,7 @@ interface = Interface()
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html', posts=posts, condition=bool(interface.get_connection))
+    return render_template('home.html', posts=posts, condition=interface.get_connection())
 
 @app.route('/about')
 def about():
@@ -71,7 +71,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Please check username and password.', 'danger')        
-    return render_template('login.html', title='Login', form=form, condition=bool(interface.get_connection()))
+    return render_template('login.html', title='Login', form=form, condition= interface.get_connection())
 
 @app.route('/logout')
 def logout():
@@ -86,3 +86,8 @@ def account():
     else:
         flash('Please login', 'info')
         return redirect(url_for('login'))
+
+@app.route('/hopper')
+def hopper():
+    if interface.get_connection():
+        
