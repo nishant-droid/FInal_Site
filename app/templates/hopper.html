@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="Content-section">
+    <form method="POST" action="", enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Login</legend>
+
+            <div class="form-group">
+                {{ form.hopper_date.label(class="form-control-label") }}
+                {% if form.hopper_date.error %}
+                    {{ form.hopper_date(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.hopper_date.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.hopper_date(class="form-control form-control-lg") }}
+                {% endif %}
+                {{ form.hopper_time.label(class="form-control-label") }}
+                {% if form.hopper_time.error %}
+                    {{ form.hopper_time(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                    {% for error in form.hopper_time.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {{ form.hopper_time(class="form-control form-control-lg") }}
+                {% endif %}
+                
+                {{ form.hopper_file.label(class="form-control-label") }}
+                {{ form.hopper_file(class="form-control-file") }}
+                {% if form.hopper_file.error %}
+                    {% for error in form.hopper_file.errors %}
+                        <span class="text-danger">{{ error }}</span></br>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{form.submit(class="btn btn-outline-info")}}
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

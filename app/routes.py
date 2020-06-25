@@ -1,9 +1,10 @@
 from flask import render_template, url_for, flash, redirect, request
 from app import app, db, bcrypt
 from app.models import User, Post
-from app.forms import RegistrationForm, LoginForm
+from app.forms import RegistrationForm, LoginForm, UploadForm
 from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
+from app.queries import Queries
 
 posts = [
     
@@ -27,8 +28,9 @@ posts = [
     }
 
 ]
-print ("creating inter object")
+
 interface = Interface()
+query = Queries()
 
 
 @app.route('/')
@@ -87,7 +89,26 @@ def account():
         flash('Please login', 'info')
         return redirect(url_for('login'))
 
-@app.route('/hopper')
+@app.route('/hopper', methods=['GET','POST'])
 def hopper():
     if interface.get_connection():
+        form=UploadForm()
+        if form.validate_on_submit():
+            hopper_date = request.form['hopper_date']
+            hopper_time = request.form['hopper_time']
+            if form.hopper_file.data:
+                hfile = form.hopper_file.data
+                file_path = interface.check_file(hfile)
+                if file_path:
+                    interface.file_manupilation(file_path,hopper_date,hopper_time)
+                    dbcur = interface.create_cursor()
+                    dbcur.execute(query.db_selection())
+                    dbcur.execute(query.push_file())
+                    flash('File uploaded successfully.', 'success')
+                else:
+                    flash('File not supported. Please check the file.', 'danger')
+    else:
+        flash('Please login to continue.', 'info')
+        return redirect(url_for('login'))
+    return render_template('hopper.html', title='Upload Hopper File', form=form)
         
