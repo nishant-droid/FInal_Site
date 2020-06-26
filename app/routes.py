@@ -5,6 +5,7 @@ from app.forms import RegistrationForm, LoginForm, UploadForm
 from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
 from app.queries import Queries
+from pathlib import Path
 
 posts = [
     
@@ -40,7 +41,7 @@ def home():
 
 @app.route('/about')
 def about():
-    return render_template('about.html', title='About')
+    return render_template('about.html', title='About', condition= interface.get_connection())
 
 @app.route('/register', methods=['POST','GET'])
 def register():
@@ -78,13 +79,12 @@ def login():
 @app.route('/logout')
 def logout():
     interface.close_connection()
-    form = LoginForm()
-    return render_template('login.html', title='Login', form= form)
+    return redirect(url_for('home'))
 
 @app.route('/account')
 def account():
     if interface.get_connection():
-        return render_template('account.html', title='Account')
+        return render_template('account.html', title='Account', condition= interface.get_connection())
     else:
         flash('Please login', 'info')
         return redirect(url_for('login'))
@@ -104,11 +104,12 @@ def hopper():
                     dbcur = interface.create_cursor()
                     dbcur.execute(query.db_selection())
                     dbcur.execute(query.push_file())
+                    interface.commit_DB()
                     flash('File uploaded successfully.', 'success')
                 else:
                     flash('File not supported. Please check the file.', 'danger')
     else:
         flash('Please login to continue.', 'info')
         return redirect(url_for('login'))
-    return render_template('hopper.html', title='Upload Hopper File', form=form)
+    return render_template('hopper.html', title='Upload Hopper File', form=form, condition= interface.get_connection())
         

@@ -23,8 +23,11 @@ class Interface(object):
     
     def create_cursor(self):
         if self.connection:
-            self.get_connection()
             return self.connection.cursor()
+
+        def commit_DB(self):
+            if self.connection:
+                return self.connection.commit()
     
 
     def get_connection(self):

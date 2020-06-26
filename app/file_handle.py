@@ -1,11 +1,8 @@
-from tkinter import filedialog
-from os import rename as rn
 from os import remove as rm
-
-from pathlib import Path
 from os import path as path
 import csv
 
+#secure privilage folder. Can be changed in my.cnf file
 final_file_destination = "/home/nishant/Documents/try/shared_code/app/static/uploads"
 
 class File_Handle():
@@ -14,6 +11,7 @@ class File_Handle():
 
 
     def File_check(self,hfile):
+        #file validation
         f_name,f_ext = path.splitext(hfile.filename)
         if f_ext == "":
             save_path = path.join(final_file_destination,f_name)
@@ -50,6 +48,10 @@ class File_Handle():
         rfp.close()
         wfp.close()
 
+        
+
+        rm(IN_FILE) # removes the primary file
+
         # Removes the unncessary data from the file.
         file_path = OUT_FILE
         with open(file_path, "r", encoding="UTF-8") as file:
@@ -73,7 +75,10 @@ class File_Handle():
             for line in reader:
                 FileWriter.writerow(line + DateStamp + TimeStamp)
 
+        rm(OUT_FILE) #removes the intermediate file
+
     def Push_Data_Into_Table():
+        #push data to hopper table in the data base
         if path.exists(initial_file): 
             my_cursor.execute("use Hopper")
             my_cursor.execute("load data infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Hopper.csv' into table File_History fields terminated by ',' lines terminated by '\n'")
