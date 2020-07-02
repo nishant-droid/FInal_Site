@@ -25,9 +25,9 @@ class Interface(object):
         if self.connection:
             return self.connection.cursor()
 
-        def commit_DB(self):
-            if self.connection:
-                return self.connection.commit()
+    def commit_DB(self):
+        if self.connection:
+            return self.connection.commit()
     
 
     def get_connection(self):

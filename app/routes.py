@@ -6,6 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
 from app.queries import Queries
 from pathlib import Path
+from app.balance_check import *
 
 posts = [
     
@@ -112,4 +113,15 @@ def hopper():
         flash('Please login to continue.', 'info')
         return redirect(url_for('login'))
     return render_template('hopper.html', title='Upload Hopper File', form=form, condition= interface.get_connection())
+
+@app.route("/post/new", methods=["GET","POST"])
+def new_post():
+    return render_template('create_post.html', title='New Post', form=form, condition= interface.get_connection())
+
+@app.route("/monthlyPlanner", methods=['GET','POST'])
+def monthlyPlanner():
+    column_list = ["Station ID","Total Cash","Hopper File Date","Hopper File Time"]
+
+    return render_template('monthlyPlanner.html', title='Monthly Visit Planner', columns= column_list, items=temp)
+
         

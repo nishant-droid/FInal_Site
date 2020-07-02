@@ -79,7 +79,8 @@ class File_Handle():
 
     def Push_Data_Into_Table():
         #push data to hopper table in the data base
-        if path.exists(initial_file): 
+        final_file_destination = final_file_destination + "/Hopper.csv"
+        if path.exists(final_file_destination): 
             my_cursor.execute("use Hopper")
-            my_cursor.execute("load data infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Hopper.csv' into table File_History fields terminated by ',' lines terminated by '\n'")
+            my_cursor.execute("load data local infile '{final_file_destination}' into table File_History fields terminated by ',' lines terminated by '\n'")
             mydb.commit()

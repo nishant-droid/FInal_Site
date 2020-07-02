@@ -41,4 +41,4 @@ class UploadForm(FlaskForm):
     hopper_date = DateField('Enter date of hopper file: ', validators=[DataRequired()], format= '%Y-%m-%d')
     hopper_time = TimeField('Enter time of hopper file: ', validators=[DataRequired()], format= '%H:%M')
     hopper_file = FileField(validators=[FileRequired()])
-    submit = SubmitField('Upload file')
+    submit = SubmitField('Upload file')    
