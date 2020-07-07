@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="Content-section">
+    <form method="POST" action="" class="form-horizontal">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Branch Data Entry</legend>
+
+            <div class="form-group">
+                {{ form.branch_code.label(class="form-control-label") }}
+
+                {% if form.branch_code.errors %}
+                    {{ form.branch_code(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.branch_code.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.branch_code(class="form-control form-control-lg") }}
+                {% endif %}
+                    
+            </div>
+            <div class="form-group">
+                {{ form.branch_name.label(class="form-control-label") }}
+
+                {% if form.branch_name.errors %}
+                    {{ form.branch_name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.branch_name.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.branch_name(class="form-control form-control-lg") }}
+                {% endif %}
+                    
+            </div>
+            <div class="form-group">
+                {{ form.atm_code.label(class="form-control-label") }}
+
+                {% if form.atm_code.errors %}
+                    {{ form.atm_code(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.atm_code.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.atm_code(class="form-control form-control-lg") }}
+                {% endif %}
+                    
+            </div>
+            <div class="form-group">
+                {{ form.bank_code.label(class="form-control-label") }}
+
+                {% if form.bank_code.errors %}
+                    {{ form.bank_code(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.bank_code.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.bank_code(class="form-control form-control-lg") }}
+                {% endif %}
+                    
+            </div>
+            <div class="form-group">
+                {{ form.bank_add.label(class="form-control-label") }}
+
+                {% if form.bank_add.errors %}
+                    {{ form.bank_add(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.bank_add.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                        {{ form.bank_add(class="form-control form-control-lg") }}
+                {% endif %}
+                    
+            </div>
+            <div class="form-group">
+                {{ form.email.label(class="form-control-label") }}
+
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control form-control-lg") }}
+                {% endif %}
+                    
+            </div>
+            <div class="form-group">
+                {{ form.email_group.label(class="form-control-label") }}
+
+                {% if form.email_group.errors %}
+                    {{ form.email_group(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email_group.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email_group(class="form-control form-control-lg") }}
+                {% endif %}
+                    
+            </div>
+        </fieldset>
+            <div class="form-group">
+                {{form.submit(class="btn btn-outline-info")}}
+            </div>
+
+{% endblock content %}

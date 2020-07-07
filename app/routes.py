@@ -1,12 +1,11 @@
 from flask import render_template, url_for, flash, redirect, request
 from app import app, db, bcrypt
 from app.models import User, Post
-from app.forms import RegistrationForm, LoginForm, UploadForm
+from app.forms import RegistrationForm, LoginForm, UploadForm, MasterBranchForm
 from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
 from app.queries import Queries
 from pathlib import Path
-from app.balance_check import *
 
 posts = [
     
@@ -74,7 +73,7 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Please check username and password.', 'danger')        
+            flash('Please check username and password.', 'danger')         
     return render_template('login.html', title='Login', form=form, condition= interface.get_connection())
 
 @app.route('/logout')
@@ -124,4 +123,25 @@ def monthlyPlanner():
 
     return render_template('monthlyPlanner.html', title='Monthly Visit Planner', columns= column_list, items=temp)
 
-        
+@app.route("/masterBranch", methods=["GET","POST"])
+def branchmaster():
+    form = MasterBranchForm()
+
+    if form.validate_on_submit():
+        if interface.get_connection():
+            branchcode = request.form['branch_code']
+            branchname = request.form['branch_name']
+            atmcode = request.form['atm_code']
+            bankcode = request.form['bank_code']
+            bankadd = request.form['bank_add']
+            email = request.form['email']
+            emailgroup = request.form['email_group']
+            dbcur = interface.create_cursor()
+            dbcur.execute(query.add_data(branchcode,branchname,atmcode,bankcode,bankadd,email,emailgroup))
+            flash('Data added!', 'success')
+    
+        else:
+            print('else condition started')
+            flash('Invalid data. Please fill all the required data', 'danger')
+    
+    return render_template('masterBranch.html', title='Branch Data',form = form )
