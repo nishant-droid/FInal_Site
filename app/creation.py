@@ -23,3 +23,17 @@ mycursor.execute("set time_zone=''+05:30")
 mycursor.execute("create table if not exists YGMDB.Master_Branch(Branch_Code varchar(20) primary key,"
                   "Branch_Name varchar(50),"
                   "ATM_Code varchar(20), Bank_Code varchar(20), Bank_Address text, Email varchar(50), Email_Group int)")
+
+mycursor.execute("create table if not exists YGMDB.Master_CIT(CIT_Code varchar(20) primary key,"
+                  "CIT_Name varchar(50),"
+                  "Bank_Account_Details varchar(20), Address text, Contact_Person_Name varchar(20), Contact_Person_Mobile_Number int, Contact_Person_Email varchar(25))")
+
+mycursor.execute("create table if not exists YGMDB.Master_Bank(Bank_Code varchar(20) primary key,"
+                  "Bank_Name varchar(50),"
+                  "Bank_Account_Details varchar(20), Address text, Miscellaneous text)")
+
+mycursor.execute("create table if not exists YGMDB.Master_MFT(MFT_ID varchar(20) primary key,"
+                  "Site_Name varchar(25),"
+                  "District varchar(20), Bank_Code int, Branch_Code int, CIT_Name varchar(20), CIT_Code varchar(20), Cash_Live_Date date, Tech_Live_Date varchar(20), UBS_Code varchar(20),"
+                  "Route_Number varchar(5),Sequence_Number varchar(20), ATM_Serial_Number int, Secretary_Name varchar(20), Secretary_Number int, Engineer_Name varchar(20), Engineer_Number int,"
+                  "Cash_Removal_Date date, Cash_Removal_Reason varchar(20), Closure_Type varchar(10), Closure_Date date, Closure_Remark tinytext, Salary_Payment_Date date, Est_Salary_per_Payment int, ")

@@ -1,11 +1,12 @@
 from flask import render_template, url_for, flash, redirect, request
 from app import app, db, bcrypt
 from app.models import User, Post
-from app.forms import RegistrationForm, LoginForm, UploadForm, MasterBranchForm
+from app.forms import RegistrationForm, LoginForm, UploadForm, MasterBranchForm, MasterCITForm, MasterBankForm
 from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
 from app.queries import Queries
 from pathlib import Path
+from app.mysqlconnection import errorcode
 
 posts = [
     
@@ -62,13 +63,9 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        print('after submit')
         user = request.form['username']
         passw = request.form['password']
         dbcur = interface.create_connection(user,passw)
-        dbcur.execute('show databases')
-        for db in dbcur:
-            print(db)
         if interface.get_connection():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
@@ -78,8 +75,13 @@ def login():
 
 @app.route('/logout')
 def logout():
-    interface.close_connection()
-    return redirect(url_for('home'))
+    if interface.get_connection():
+        interface.close_connection()
+        if interface.get_connection():
+            print("Get the actual connection even after disconnecting")
+        else:
+            print("Doesnt Get the connection after disconnecting when get_connection is called")
+        return redirect(url_for('home'))
 
 @app.route('/account')
 def account():
@@ -126,9 +128,8 @@ def monthlyPlanner():
 @app.route("/masterBranch", methods=["GET","POST"])
 def branchmaster():
     form = MasterBranchForm()
-
-    if form.validate_on_submit():
-        if interface.get_connection():
+    if interface.get_connection():
+        if form.validate_on_submit():
             branchcode = request.form['branch_code']
             branchname = request.form['branch_name']
             atmcode = request.form['atm_code']
@@ -137,11 +138,63 @@ def branchmaster():
             email = request.form['email']
             emailgroup = request.form['email_group']
             dbcur = interface.create_cursor()
-            dbcur.execute(query.add_data(branchcode,branchname,atmcode,bankcode,bankadd,email,emailgroup))
-            flash('Data added!', 'success')
-    
-        else:
-            print('else condition started')
-            flash('Invalid data. Please fill all the required data', 'danger')
-    
-    return render_template('masterBranch.html', title='Branch Data',form = form )
+            try:
+                dbcur.execute(query.add_data_branch(branchcde,branchname,atmcode,bankcode,bankadd,email,emailgroup))
+                interface.commit_DB()
+                flash('Data added!', 'success')
+            except:
+                flash(f'Something went Wrong!!', 'danger')
+
+    else:
+        flash('Please login to continue.', 'info')
+        return redirect(url_for('login'))
+    return render_template('masterBranch.html', title='Branch Data',form = form, condition = interface.get_connection() )
+
+@app.route("/masterCIT", methods=["GET","POST"])
+def citmaster():
+    form = MasterCITForm()
+    if interface.get_connection():
+        if form.validate_on_submit():
+            citcode = request.form['cit_code']
+            citname = request.form['cit_name']
+            bankaccdetails = request.form['bank_account_details']
+            add = request.form['address']
+            contactpersonname = request.form['contact_person_name']
+            contactpersonnumber = request.form['contact_person_mobile_number']
+            contactpersonemail = request.form['contact_person_email']
+            dbcur = interface.create_cursor()
+            try:
+                dbcur.execute(query.add_data_CIT(citcode,citname,bankaccdetails,add,contactpersonname,contactpersonnumber,contactpersonemail))
+                interface.commit_DB()
+                flash('Data added!', 'success')
+            except:
+                flash(f'Something went Wrong!!', 'danger')
+
+    else:
+        flash('Please login to continue.', 'info')
+        return redirect(url_for('login'))
+    return render_template('masterCIT.html', title='CIT Data',form = form, condition = interface.get_connection() )
+
+
+@app.route("/masterBank", methods=["GET","POST"])
+def bankmaster():
+    form = MasterBankForm()
+    if interface.get_connection():
+        if form.validate_on_submit():
+            bankcode = request.form['bank_code']
+            bankname = request.form['bank_name']
+            bankaccdetails = request.form['bank_account_details']
+            add = request.form['address']
+            miscellaneous  = request.form['miscellaneous']
+            dbcur = interface.create_cursor()
+            try:
+                dbcur.execute(query.add_data_Bank(bankcode,bankname,bankaccdetails,add,miscellaneous))
+                interface.commit_DB()
+                flash('Data added!', 'success')
+            except:
+                flash(f'Something went Wrong!!', 'danger')
+
+    else:
+        flash('Please login to continue.', 'info')
+        return redirect(url_for('login'))
+    return render_template('masterBank.html', title='Bank Data',form = form, condition = interface.get_connection() )

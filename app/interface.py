@@ -13,9 +13,13 @@ class Interface(object):
         
     def create_connection(self, username, password):
         try:
+            print("Create connection was called")
             dbObject = DBConnection()
             self.connection = dbObject.connection(username, password)
-            self.my_cursor = self.connection.cursor()
+            if not self.connection:
+                return False
+            else:
+                self.my_cursor = self.connection.cursor()
             return self.my_cursor
 
         except ConnectionError as ex:
@@ -31,12 +35,15 @@ class Interface(object):
     
 
     def get_connection(self):
+        print('get connection was called')
         return self.connection
         
     
     def close_connection(self):
         if self.connection:
-            self.connection.close()
+            print('Close connection was called after self.connection codition is true')
+            self.connection.disconnect()
+            self.connection = None
             return True
     
     def file_manupilation(self,filename,hopper_date,hopper_time):
@@ -51,3 +58,4 @@ class Interface(object):
             return self.file_check
         else:
             return False
+    

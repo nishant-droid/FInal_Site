@@ -50,5 +50,23 @@ class MasterBranchForm(FlaskForm):
     bank_code = StringField('Bank Code', validators=[DataRequired(), Length(max=20)])
     bank_add = TextAreaField('Bank Address', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    email_group = IntegerField('Email Group', validators=[DataRequired(), Length(max=2)])
+    email_group = IntegerField('Email Group', validators=[DataRequired()])
+    submit = SubmitField('Add Data')
+
+class MasterCITForm(FlaskForm):
+    cit_code = StringField('CIT Code', validators=[Length(max=20), DataRequired()])
+    cit_name = StringField('CIT Name', validators=[Length(max=50), DataRequired()])
+    bank_account_details = StringField('Bank Account Details', validators=[DataRequired(), Length(max=20)])
+    address = TextAreaField('Address', validators=[DataRequired()])
+    contact_person_name = StringField('Contact Person Name', validators=[DataRequired(), Length(max=20)])
+    contact_person_mobile_number = IntegerField('Email', validators=[DataRequired()])
+    contact_person_email = StringField('Email Group', validators=[DataRequired(), Email()])
+    submit = SubmitField('Add Data')
+
+class MasterBankForm(FlaskForm):
+    bank_code = StringField('Bank Code', validators=[Length(max=20), DataRequired()])
+    bank_name = StringField('Bank Name', validators=[Length(max=50), DataRequired()])
+    bank_account_details = StringField('Bank Account Details', validators=[DataRequired(), Length(max=20)])
+    address = TextAreaField('Address', validators=[DataRequired()])
+    miscellaneous = TextAreaField('Comments')
     submit = SubmitField('Add Data')
