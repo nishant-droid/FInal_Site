@@ -70,3 +70,31 @@ class MasterBankForm(FlaskForm):
     address = TextAreaField('Address', validators=[DataRequired()])
     miscellaneous = TextAreaField('Comments')
     submit = SubmitField('Add Data')
+
+class MasterMFTForm(FlaskForm):
+    mft_id = StringField('MFT ID', validators=[DataRequired(), Length(max=20)])
+    site_name = StringField('Site Name', validators=[DataRequired(), Length(max=25)])
+    district = StringField('District', validators=[DataRequired(), Length(max=20)])
+    bank_code = IntegerField('Bank Code', validators=[DataRequired()])
+    branch_code = IntegerField('Branch Code', validators=[DataRequired()])
+    cit_name = StringField('CIT Name', validators=[DataRequired(), Length(max=20)])
+    cit_code = StringField('CIT Code', validators=[DataRequired(), Length(max=20)])
+    cassette_configuration = StringField("Cassette Configuration", validators=[DataRequired(), Length(max=5)])
+    cash_live_date = DateField('Cash Live Date', validators=[DataRequired()])
+    tech_live_date = DateField('Tech Live Date', validators=[DataRequired()])
+    ubs_code = StringField('UBS Code', validators=[DataRequired(), Length(max=20)])
+    route_number = StringField('Route Number', validators=[DataRequired(), Length(max=5)])
+    sequence_number = StringField('Sequence Number', validators=[DataRequired(), Length(max=20)])
+    atm_serial_number = IntegerField('ATM Serial Number', validators=[DataRequired()])
+    secretary_name = StringField('Secretary Name', validators=[DataRequired(), Length(max=20)])
+    secretary_number = IntegerField('Secretary Number', validators=[DataRequired()])
+    engineer_name = StringField('Engineer Name', validators=[DataRequired(), Length(max=20)])
+    engineer_number = IntegerField('Engineer Number', validators=[DataRequired()])
+    cash_removal_date = DateField('Cash Removal Date') #check if it required or not
+    cash_removal_reason = StringField('Cash Removal Reason', validators=[Length(max=20)])
+    closure_type = StringField('Closure Type', validators=[Length(max=10)])
+    closure_date = DateField('Closure Date')#check of if the data is required
+    closure_remark = TextAreaField('Closure Remarks')#check of if the data is required
+    salary_payment_date = DateField('Salary Payment Date', validators=[DataRequired()])
+    salary_per_payment = IntegerField('Estimate Salary per Payment', validators=[DataRequired()])
+    submit = SubmitField('Add Data')

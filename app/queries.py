@@ -19,3 +19,8 @@ class Queries():
     def add_data_Bank(self, bankcode, bankname, bankaccdetails, add, miscellaneous):
         query = f"insert into YGMDB.Master_Bank(Bank_Code, Bank_Name, Bank_Account_Details, Address, Miscellaneous) values('{bankcode}','{bankname}','{bankaccdetails}','{add}','{miscellaneous}')"
         return query
+
+    def add_data_MFT(self, mftif, sitename, district, bankcode, branchcode, citname, citcode, cassetteconfig, cashlivedate,techlivedate, ubscode, routenumber, sequencenumber, atmserialnumber,secretaryname, secretarynumber, engineername, engineernumber, cashremovaldate, cashremovalreason, closuretype, closuredate, closureremark, salarypaymentdate, salaryperpayment):
+        query = f"insert into YGMDB.Master_Bank(MFT_ID, Site_Name, District, Bank_Code, Branch_Code, CIT_Name, CIT_Code, Cassette_Configuration, Cash_Live_Date, Tech_Live_Date, UBS_Code, Route_Number, Sequence_Number, ATM_Serial_Number, Secretary_Name, Secretary_Number, Engineer_Name, Engineer_Number, Cash_Removal_Date, Cash_Removal_Reason, Closure_Type, Closure_Date, Closure_Remark, Salary_Payment_Date, Est_Salary_per_Payment ) "
+        "values('{mftid}','{sitename}','{district}','{bankcode}','{branchcode}','{citname}','{citcode}','{cassetteconfig}','{cashlivedate}','{techlivedate}','{ubscode}','{routenumber}', '{sequencenumber}','{atmserialnumber}','{secretaryname}', '{secretarynumber}', '{engineername}', '{engineernumber}', '{cashremovaldate}', '{cashremovalreason}', '{closuretype}', '{closuredate}', '{closureremark}', '{salarypaymentdate}', '{salaryperpayment}')"
+        return query

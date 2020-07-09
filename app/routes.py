@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request
 from app import app, db, bcrypt
 from app.models import User, Post
-from app.forms import RegistrationForm, LoginForm, UploadForm, MasterBranchForm, MasterCITForm, MasterBankForm
+from app.forms import RegistrationForm, LoginForm, UploadForm, MasterBranchForm, MasterCITForm, MasterBankForm, MasterMFTForm
 from flask_login import login_user, current_user, logout_user, login_required
 from app.interface import Interface
 from app.queries import Queries
@@ -198,3 +198,46 @@ def bankmaster():
         flash('Please login to continue.', 'info')
         return redirect(url_for('login'))
     return render_template('masterBank.html', title='Bank Data',form = form, condition = interface.get_connection() )
+
+@app.route("/masterMFT", methods=["GET","POST"])
+def mftmaster():
+    form = MasterMFTForm()
+    if interface.get_connection():
+        if form.validate_on_submit():
+            mftid = request.form['mft_id']
+            sitename = request.form['site_name']
+            district = request.form['district']
+            bankcode = request.form['bank_code']
+            branchcode = request.form['branch_code']
+            citname = request.form['cit_name']
+            citcode = request.form['cit_code']
+            cassetteconfig = request.form['cassette_configuration']
+            cashlivedate = request.form['cash_live_date']
+            techlivedate = request.form['tech_live_date']
+            ubscode = request.form['ubs_code']
+            routenumber = request.form['route_number']
+            sequencenumber = request.form['sequence_number']
+            atmserialnumber = request.form['atm_serial_number']
+            secretaryname = request.form['secretary_name']
+            secretarynumber = request.form['secretary_number']
+            engineername = request.form['engineer_name']
+            engineernumber = request.form['engineer_number']
+            cashremovaldate = request.form['cash_removal_date']
+            cashremovalreason = request.form['cash_removal_reason']
+            closuretype = request.form['closure_type']
+            closuredate = request.form['closure_date']
+            closureremark = request.form['closure_remark']
+            salarypaymentdate = request.form['salary_payment_date']
+            salaryperpayment = request.form['salary_per_payment']
+            dbcur = interface.create_cursor()
+            try:
+                dbcur.execute(query.add_data_MFT( mftif, sitename, district, bankcode, branchcode, citname, citcode, cassetteconfig, cashlivedate,techlivedate, ubscode, routenumber, sequencenumber, atmserialnumber,secretaryname, secretarynumber, engineername, engineernumber, cashremovaldate, cashremovalreason, closuretype, closuredate, closureremark, salarypaymentdate, salaryperpayment))
+                interface.commit_DB()
+                flash('Data added!', 'success')
+            except:
+                flash(f'Something went Wrong!!', 'danger')
+
+    else:
+        flash('Please login to continue.', 'info')
+        return redirect(url_for('login'))
+    return render_template('masterMFT.html', title='Bank Data',form = form, condition = interface.get_connection() )

@@ -20,7 +20,7 @@ mycursor.execute("create table if not exists YGMDB.Log(User varchar(10), Activit
 mycursor.execute("set time_zone=''+05:30")
 """
 
-mycursor.execute("create table if not exists YGMDB.Master_Branch(Branch_Code varchar(20) primary key,"
+mycursor.execute("create table if not exists YGMDB.Master_Branch( Branch_Code varchar(20) primary key,"
                   "Branch_Name varchar(50),"
                   "ATM_Code varchar(20), Bank_Code varchar(20), Bank_Address text, Email varchar(50), Email_Group int)")
 
@@ -34,6 +34,10 @@ mycursor.execute("create table if not exists YGMDB.Master_Bank(Bank_Code varchar
 
 mycursor.execute("create table if not exists YGMDB.Master_MFT(MFT_ID varchar(20) primary key,"
                   "Site_Name varchar(25),"
-                  "District varchar(20), Bank_Code int, Branch_Code int, CIT_Name varchar(20), CIT_Code varchar(20), Cash_Live_Date date, Tech_Live_Date varchar(20), UBS_Code varchar(20),"
+                  "District varchar(20), Bank_Code int, Branch_Code int, CIT_Name varchar(20), CIT_Code varchar(20), Cassette_Configuration varchar(5), Cash_Live_Date date, Tech_Live_Date date, UBS_Code varchar(20),"
                   "Route_Number varchar(5),Sequence_Number varchar(20), ATM_Serial_Number int, Secretary_Name varchar(20), Secretary_Number int, Engineer_Name varchar(20), Engineer_Number int,"
-                  "Cash_Removal_Date date, Cash_Removal_Reason varchar(20), Closure_Type varchar(10), Closure_Date date, Closure_Remark tinytext, Salary_Payment_Date date, Est_Salary_per_Payment int, ")
+                  "Cash_Removal_Date date, Cash_Removal_Reason varchar(20), Closure_Type varchar(10), Closure_Date date, Closure_Remark tinytext, Salary_Payment_Date date, Est_Salary_per_Payment int)")
+
+mycursor.execute("create table if not exists YGMDB.Insurance(MFT_ID varchar(20),Status bool, Insurance_Commence_Date date, Insurence_Renewal_Date date, Insurance_Amount int)")
+
+mycursor.execute("create table if not exists YGMDB.Cassette_Configuration(Machine_Capacity int, Model varchar(20), 100_Denomination bool default 0, 200_Denomination bool default 0, 500_Denomination bool default 0, 2000_Denomination bool default 0)")
