@@ -1,48 +1,43 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, TextAreaField,RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_wtf.file import FileField, FileRequired
 from werkzeug.utils import secure_filename
 from app.models import User
 from wtforms.fields.html5 import DateField, TimeField
+from app.interface import Interface
+from app.queries import Queries
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username',
-                            validators=[DataRequired(), Length(min=5, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    username = StringField('Username',validators=[DataRequired(), Length(min=5, max=20)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
-    confirm_password = PasswordField('Confirm Password',
-                                     validators=[DataRequired(), EqualTo('password')])
+    confirm_password = PasswordField('Confirm Password',validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign up')
-    def validate_username(self,username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('Username taken')
     
-    def validate_email(self,email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError('User already exist. Please login or choose forgot password')
+    def validate_username(self,username):
+        dbcur = Interface.create_cursor()
+        dbcur.execute(Queries.get_users(username.data))
+        users = dbcur.fetchall()
+        user_list = []
+        for user in users:
+            user_list.append(user[0].decode())
 
-
+# Field s declaration for Login from
 class LoginForm(FlaskForm):
     #email = StringField('Email', validators=[DataRequired(), Email()])
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remeber me')
     submit = SubmitField('Login')
-"""
-    def validate_field(self,field):
-        user = User.query.Filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('Username taken')
-"""
+
+# Fields declaration for Hopper file upload form
 class UploadForm(FlaskForm):
     hopper_date = DateField('Enter date of hopper file: ', validators=[DataRequired()], format= '%Y-%m-%d')
     hopper_time = TimeField('Enter time of hopper file: ', validators=[DataRequired()], format= '%H:%M')
     hopper_file = FileField(validators=[FileRequired()])
     submit = SubmitField('Upload file')    
 
+# Fields declaration for Master_Branch Form
 class MasterBranchForm(FlaskForm):
     branch_code = StringField('Branch Code', validators=[Length(max=20), DataRequired()])
     branch_name = StringField('Branch Name', validators=[Length(max=50), DataRequired()])
@@ -53,6 +48,7 @@ class MasterBranchForm(FlaskForm):
     email_group = IntegerField('Email Group', validators=[DataRequired()])
     submit = SubmitField('Add Data')
 
+# Fields declaration for Master_CIT form
 class MasterCITForm(FlaskForm):
     cit_code = StringField('CIT Code', validators=[Length(max=20), DataRequired()])
     cit_name = StringField('CIT Name', validators=[Length(max=50), DataRequired()])
@@ -63,6 +59,7 @@ class MasterCITForm(FlaskForm):
     contact_person_email = StringField('Email Group', validators=[DataRequired(), Email()])
     submit = SubmitField('Add Data')
 
+# Fields declaration for Master_Bank form
 class MasterBankForm(FlaskForm):
     bank_code = StringField('Bank Code', validators=[Length(max=20), DataRequired()])
     bank_name = StringField('Bank Name', validators=[Length(max=50), DataRequired()])
@@ -71,6 +68,7 @@ class MasterBankForm(FlaskForm):
     miscellaneous = TextAreaField('Comments')
     submit = SubmitField('Add Data')
 
+# Fields declaration for Master_MFT form
 class MasterMFTForm(FlaskForm):
     mft_id = StringField('MFT ID', validators=[DataRequired(), Length(max=20)])
     site_name = StringField('Site Name', validators=[DataRequired(), Length(max=25)])
@@ -92,9 +90,28 @@ class MasterMFTForm(FlaskForm):
     engineer_number = IntegerField('Engineer Number', validators=[DataRequired()])
     cash_removal_date = DateField('Cash Removal Date') #check if it required or not
     cash_removal_reason = StringField('Cash Removal Reason', validators=[Length(max=20)])
-    closure_type = StringField('Closure Type', validators=[Length(max=10)])
+    closure_type = StringField('Closure Type', validators=[DataRequired(), Length(max=5)])
     closure_date = DateField('Closure Date')#check of if the data is required
     closure_remark = TextAreaField('Closure Remarks')#check of if the data is required
-    salary_payment_date = DateField('Salary Payment Date', validators=[DataRequired()])
+    salary_payment_date = StringField('Salary Payment Date', validators=[DataRequired()])
     salary_per_payment = IntegerField('Estimate Salary per Payment', validators=[DataRequired()])
     submit = SubmitField('Add Data')
+
+    #Custom validation for salary payment dates entered
+    def validate_salary_payment_date(self, salary_payment_date):
+        valid_dates = list(range(1,32))
+        dates = salary_payment_date.data.split(',')
+        for date in dates:
+            if int(date) not in valid_dates:
+                raise ValidationError("The input is not valid")
+    #Custom validation for number of digits in secretary number field
+    def validate_secretary_number(self,secretary_number):
+        length = len(str(secretary_number.data))
+        if length != 10:
+            raise ValidationError("Incorrect Number")
+
+    #Custom validation for number of digits in engineer number field
+    def validate_engineer_number(self, engineer_number):
+        length = len(str(engineer_number.data))
+        if length != 10:
+            raise ValidationError("Incorrect Number")

@@ -8,6 +8,7 @@ from app.queries import Queries
 from pathlib import Path
 from app.mysqlconnection import errorcode
 
+
 posts = [
     
     {
@@ -231,13 +232,146 @@ def mftmaster():
             salaryperpayment = request.form['salary_per_payment']
             dbcur = interface.create_cursor()
             try:
-                dbcur.execute(query.add_data_MFT( mftif, sitename, district, bankcode, branchcode, citname, citcode, cassetteconfig, cashlivedate,techlivedate, ubscode, routenumber, sequencenumber, atmserialnumber,secretaryname, secretarynumber, engineername, engineernumber, cashremovaldate, cashremovalreason, closuretype, closuredate, closureremark, salarypaymentdate, salaryperpayment))
+                dbcur.execute(query.add_data_MFT( mftid, sitename, district, bankcode, branchcode, citname, citcode, cassetteconfig, cashlivedate,techlivedate, ubscode, routenumber, sequencenumber, atmserialnumber,secretaryname, secretarynumber, engineername, engineernumber, cashremovaldate, cashremovalreason, closuretype, closuredate, closureremark, salarypaymentdate, salaryperpayment))
                 interface.commit_DB()
                 flash('Data added!', 'success')
             except:
-                flash(f'Something went Wrong!!', 'danger')
+                flash('Something went Wrong!!', 'danger')
 
     else:
         flash('Please login to continue.', 'info')
         return redirect(url_for('login'))
-    return render_template('masterMFT.html', title='Bank Data',form = form, condition = interface.get_connection() )
+    return render_template('masterMFT.html', title='Add Bank Data',form = form, condition = interface.get_connection())
+
+@app.route("/masterBankdata", methods=["GET"])
+def bankdata():
+    if interface.get_connection():
+        dbcur = interface.create_cursor()
+        try:
+            dbcur.execute(query.get_data("Master_Bank"))
+            data = dbcur.fetchall()
+            items=[]
+            list_labels = ["Sr_No","Bank_Code", "Bank_Name", "Bank_Acc_Details", "Address", "Miscelleneous"]
+            for each_element in data:
+                out = dict()
+                out[list_labels[0]]=each_element[0]
+                out[list_labels[1]]=each_element[1]
+                out[list_labels[2]]=each_element[2]
+                out[list_labels[3]]=each_element[3]
+                out[list_labels[4]]=each_element[4]
+                out[list_labels[5]]=each_element[5]
+                items.append(out)
+            table = interface.get_data(items)
+        except:
+            flash('Something went wrong!!','danger')
+            return redirect(url_for('bankmaster'))
+    else:
+        return redirect(url_for('login'))
+    return render_template('masterBankData.html', table = table, title='Bank Data', condition= interface.get_connection())
+
+@app.route("/masterBranchdata", methods=["GET"])
+def branchdata():
+    if interface.get_connection():
+        dbcur = interface.create_cursor()
+        try:
+            dbcur.execute(query.get_data("Master_Branch"))
+            data = dbcur.fetchall()
+            items=[]
+            list_labels = ["Sr_No","Branch_Code", "Branch_Name", "ATM_Code", "Bank_Code", "Bank_Add", "Emal","Email_Group"]
+            for each_element in data:
+                out = dict()
+                out[list_labels[0]]=each_element[0]
+                out[list_labels[1]]=each_element[1]
+                out[list_labels[2]]=each_element[2]
+                out[list_labels[3]]=each_element[3]
+                out[list_labels[4]]=each_element[4]
+                out[list_labels[5]]=each_element[5]
+                out[list_labels[5]]=each_element[6]
+                out[list_labels[5]]=each_element[7]
+                items.append(out)
+            table = interface.get_data(items)
+        except:
+            flash('Something went wrong!!','danger')
+            return redirect(url_for('branchmaster'))
+    else:
+        return redirect(url_for('login'))
+    return render_template('masterBankData.html', table = table, title='Brach Data', condition= interface.get_connection())
+
+
+@app.route("/masterCITdata", methods=["GET"])
+def CITdata():
+    if interface.get_connection():
+        dbcur = interface.create_cursor()
+        try:
+            dbcur.execute(query.get_data("Master_CIT"))
+            data = dbcur.fetchall()
+            items=[]
+            list_labels = ["Sr_No","CIT_Code", "CIT_Name", "CIT_Bank_Acc_Details", "CIT_Address", "Contact_Person_Name", "Contact_Person_Mobile_Number","Contact_Person_Email"]
+            for each_element in data:
+                out = dict()
+                out[list_labels[0]]=each_element[0]
+                out[list_labels[1]]=each_element[1]
+                out[list_labels[2]]=each_element[2]
+                out[list_labels[3]]=each_element[3]
+                out[list_labels[4]]=each_element[4]
+                out[list_labels[5]]=each_element[5]
+                out[list_labels[5]]=each_element[6]
+                out[list_labels[5]]=each_element[7]
+                items.append(out)
+            table = interface.get_data(items)
+        except:
+            flash('Something went wrong!!','danger')
+            return redirect(url_for('citmaster'))
+    else:
+        return redirect(url_for('login'))
+    return render_template('masterBankData.html', table = table, title='CIT Data', condition= interface.get_connection())
+
+    @app.route("/masterCITdata", methods=["GET"])
+def CITdata():
+    if interface.get_connection():
+        dbcur = interface.create_cursor()
+        try:
+            dbcur.execute(query.get_data("Master_CIT"))
+            data = dbcur.fetchall()
+            items=[]
+            list_labels = ["Sr_No","MFT_ID", "Site_Name", "District", "Bank_Code", "Branch_Code", "CIT_Name","CIT_Code","Cassette_Config",\
+                "Cahs_Live_Date","Tech_Live_Date","UBS_Code","Route_Number","Sequence_Number","ATM_Serial_Number","Secretary_Name","Secretary_Number",\
+                    "Engineer_Name","Engineer_Number","Cash_Removal_Date","Cash_Removal_Reason","Closure_Type","Closure_Date","Closure_Remark","Salary_Payment_Date","Salary_Per_Payment"]
+            for each_element in data:
+                out = dict()
+                out[list_labels[0]]=each_element[0]
+                out[list_labels[1]]=each_element[1]
+                out[list_labels[2]]=each_element[2]
+                out[list_labels[3]]=each_element[3]
+                out[list_labels[4]]=each_element[4]
+                out[list_labels[5]]=each_element[5]
+                out[list_labels[6]]=each_element[6]
+                out[list_labels[7]]=each_element[7]
+                out[list_labels[8]]=each_element[8]
+                out[list_labels[9]]=each_element[9]
+                out[list_labels[10]]=each_element[10]
+                out[list_labels[11]]=each_element[11]
+                out[list_labels[12]]=each_element[12]
+                out[list_labels[13]]=each_element[13]
+                out[list_labels[14]]=each_element[14]
+                out[list_labels[15]]=each_element[15]
+                out[list_labels[16]]=each_element[16]
+                out[list_labels[17]]=each_element[17]
+                out[list_labels[18]]=each_element[18]
+                out[list_labels[19]]=each_element[19]
+                out[list_labels[20]]=each_element[20]
+                out[list_labels[21]]=each_element[21]
+                out[list_labels[22]]=each_element[22]
+                out[list_labels[23]]=each_element[23]
+                out[list_labels[24]]=each_element[24]
+                out[list_labels[25]]=each_element[25]
+                out[list_labels[26]]=each_element[26]
+                
+                items.append(out)
+            table = interface.get_data(items)
+        except:
+            flash('Something went wrong!!','danger')
+            return redirect(url_for('mftmaster'))
+    else:
+        return redirect(url_for('login'))
+    return render_template('masterBankData.html', table = table, title='MFT Data', condition= interface.get_connection())

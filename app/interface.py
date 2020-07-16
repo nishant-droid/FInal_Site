@@ -1,5 +1,6 @@
 from app.mysqlconnection import DBConnection
 from app.file_handle import File_Handle
+from app.tables import Master_Bank_Table
 
 
 class Interface(object):
@@ -9,6 +10,7 @@ class Interface(object):
         self.my_cursor = None
         self.file_manupilator = None
         self.file_check = None
+        self.data = None
         
         
     def create_connection(self, username, password):
@@ -58,4 +60,10 @@ class Interface(object):
             return self.file_check
         else:
             return False
+
+    def get_data(self,data):
+        masterbank = Master_Bank_Table(data, classes=['table table-striped'])
+        return masterbank
+
+
     

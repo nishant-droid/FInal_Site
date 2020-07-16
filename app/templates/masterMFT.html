@@ -311,14 +311,14 @@
                 {{ form.closure_type.label(class="form-control-label") }}
 
                 {% if form.closure_type.errors %}
-                    {{ form.closure_type(class="form-control form-control-lg is-invalid") }}
+                    {{ form.closure_type(class="form-control radio is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.closure_type.errors %}
                         <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.closure_type(class="form-control form-control-lg") }}
+                    {{ form.closure_type(class="form-control radio") }}
                 {% endif %}
                     
             </div>

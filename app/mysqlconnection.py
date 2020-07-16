@@ -12,8 +12,8 @@ class DBConnection(object):
         try:
             mydb = mysql.connector.connect(
                     host = "localhost",
-                    user = user,
-                    passwd = pwd,
+                    user = "root",
+                    passwd = "Password@123",
                     auth_plugin = "mysql_native_password",)
                 
             if mydb.is_connected:
